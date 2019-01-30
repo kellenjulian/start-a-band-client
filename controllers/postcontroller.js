@@ -2,17 +2,18 @@ var express = require('express');
 var router = require('express').Router();
 var sequelize = require('../db');
 let Post = require('../db').import('../models/post')
+validateSession = require('../middleware/validate-session');
 
 router.get('/post', function (req, res) {
 
     Post
         .findAll({
-            where: { owner: req.user.id}
+            where: { owner_id: req.user.id}
         })
         .then(
             function findAllSuccess(data) {
                 res.status(200).json({
-                    logdata: data,
+                    postdata: data,
                     message: "Data fetched."
                 })
             },
@@ -39,9 +40,8 @@ router.get('/:id', (req, res) => {
         )
 })
 
-router.post('/createpost', function(req, res) {
-    console.log("create post")
-    var postData = req.body.postdata.item;
+router.post('/createpost', validateSession, function(req, res) {
+    console.log(req.body)
 
     Post
         .create({
@@ -95,7 +95,7 @@ router.put('/update/:id', (req, res) => {
     
 })
 
-router.delete('/remove', (req, res) => {
+router.delete('/remove/:id', (req, res) => {
     Post.destroy({
         where: {
             id: req.body.id,

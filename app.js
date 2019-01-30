@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config()
 
 var express = require('express');
 var app = express();
@@ -6,6 +6,9 @@ var db = require('./db');
 var user = require('./controllers/usercontroller');
 var post = require('./controllers/postcontroller');
 var bodyParser = require('body-parser');
+
+app.use(require("./middleware/headers"));
+
 
 db.sync();
 app.use(bodyParser.json());

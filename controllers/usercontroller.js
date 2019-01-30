@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
 
 router.post('/signup', function (req, res) {
     console.log("something");
-    
+    // res.status(200).json({message: 'all cool, man'})
     var username = req.body.user.username;
     var pass = req.body.user.password;
     var email = req.body.user.email;
@@ -28,14 +28,14 @@ router.post('/signup', function (req, res) {
         function createSuccess(user) {
             var token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: 60*60*24});
 
-            res.json({
+            res.status(200).json({
                 user: user,
                 message: 'created',
                 sessionToken: token
             });
         },
         function createError(err) {
-            res.send(500, err.message);
+            res.status(500).send(err.message);
         }
     );
 });
